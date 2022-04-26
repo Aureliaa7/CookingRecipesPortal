@@ -1,6 +1,12 @@
+using CookingRecipesPortal_API.Filters;
+using CookingRecipesPortal_DAL.Interfaces.DataAccess;
+using CookingRecipesPortal_DAL.Interfaces.Services;
+using CookingRecipesPortal_DAL.Services;
 using CookingRecipesPortal_Infrastructure.AppDbContext;
+using CookingRecipesPortal_Infrastructure.DataAccess;
+using CookingRecipesPortal_Infrastructure.MappingConfigurations;
+using CookingRecipesPortal_Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +18,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CookingRecipesPortalContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+
+// register services
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+
+// configure global filters
+builder.Services.AddMvc(options => {
+    options.Filters.Add(new GlobalExceptionFilter());
+});
+
 
 var app = builder.Build();
 

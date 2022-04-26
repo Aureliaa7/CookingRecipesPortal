@@ -1,25 +1,22 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.ComponentModel.DataAnnotations;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-namespace CookingRecipesPortal_DAL.DomainModels
+namespace CookingRecipesPortal_DAL.DTOs
 {
-    public class User
+    public class RegisterDto
     {
-        public Guid Id { get; set; }
-
+        [Required]
         public string FirstName { get; set; }
 
+        [Required]
         public string LastName { get; set; }
 
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
-        public byte[] PasswordHash { get; set; }
-
-        public byte[] PasswordSalt { get; set; }
-
+        [Required]
         public string Password { get; set; }
-
-        public ICollection<Recipe> Recipes { get; set; } = new Collection<Recipe>();
     }
 }

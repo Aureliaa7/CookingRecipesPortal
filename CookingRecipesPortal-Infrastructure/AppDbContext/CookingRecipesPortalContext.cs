@@ -2,6 +2,8 @@
 using CookingRecipesPortal_Infrastructure.ModelConfigurations;
 using Microsoft.EntityFrameworkCore;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
 namespace CookingRecipesPortal_Infrastructure.AppDbContext
 {
     public class CookingRecipesPortalContext : DbContext
