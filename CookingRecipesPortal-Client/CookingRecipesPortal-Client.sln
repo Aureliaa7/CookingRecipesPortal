@@ -7,6 +7,10 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "CookingRecipesPortal-Client
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookingRecipesPortal-API", "..\CookingRecipesPortal-API\CookingRecipesPortal-API.csproj", "{071E88C4-A636-4723-9E63-486CCACA91D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookingRecipesPortal-Core", "..\CookingRecipesPortal-DAL\CookingRecipesPortal-Core.csproj", "{E1F2B83A-502B-4C25-AEC4-954AD90C76BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookingRecipesPortal-Infrastructure", "..\CookingRecipesPortal-Infrastructure\CookingRecipesPortal-Infrastructure.csproj", "{F74DE3E0-E369-4267-B252-306A210C9FEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,14 @@ Global
 		{071E88C4-A636-4723-9E63-486CCACA91D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{071E88C4-A636-4723-9E63-486CCACA91D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{071E88C4-A636-4723-9E63-486CCACA91D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1F2B83A-502B-4C25-AEC4-954AD90C76BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1F2B83A-502B-4C25-AEC4-954AD90C76BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1F2B83A-502B-4C25-AEC4-954AD90C76BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1F2B83A-502B-4C25-AEC4-954AD90C76BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F74DE3E0-E369-4267-B252-306A210C9FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F74DE3E0-E369-4267-B252-306A210C9FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F74DE3E0-E369-4267-B252-306A210C9FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F74DE3E0-E369-4267-B252-306A210C9FEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
