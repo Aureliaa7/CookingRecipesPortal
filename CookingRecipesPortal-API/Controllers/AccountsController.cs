@@ -38,5 +38,11 @@ namespace CookingRecipesPortal_API.Controllers
 
             return Unauthorized();
         }
+
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok("Hello!");
+        }
     }
 }
