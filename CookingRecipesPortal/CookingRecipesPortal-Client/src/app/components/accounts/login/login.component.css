@@ -1,0 +1,19 @@
+.login-container {
+  text-align: center;
+  margin: auto;
+  width: 35%;
+  margin-top: 100px;
+}
+
+.form-container {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.form-field {
+  display: block;
+}
+
+.submit-button {
+  width: 100%;
+}

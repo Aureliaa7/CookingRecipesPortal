@@ -5,5 +5,8 @@
 <p *ngIf="!data"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
 
 <div *ngIf="data">
-    Response from API: {{data}}
+  Response from API: {{data}}
 </div>
+
+
+<router-outlet></router-outlet>
