@@ -1,12 +1,4 @@
-<h1 id="tableLabel">Cooking Recipes Portal</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-<p *ngIf="!data"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
-
-<div *ngIf="data">
-  Response from API: {{data}}
+<app-nav-menu></app-nav-menu>
+<div class="container">
+  <router-outlet></router-outlet>
 </div>
-
-
-<router-outlet></router-outlet>

@@ -12,13 +12,17 @@ import { MatCardModule } from '@angular/material/card';
 import { AccountService } from './services/account.service';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './components/accounts/login/login.component';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { HomeComponent } from './components/home/home.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    NavMenuComponent,
+    HomeComponent
   ],
   imports: [
     AppRoutingModule,
