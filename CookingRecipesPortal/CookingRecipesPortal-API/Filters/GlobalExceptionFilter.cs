@@ -16,6 +16,10 @@ namespace CookingRecipesPortal_API.Filters
             {
                 context.Result = new NotFoundResult();
             }
+            else if (context.Exception is ActionNotAllowedException)
+            {
+                context.Result = new ForbidResult();
+            }
             else
             {
                 context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
