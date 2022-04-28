@@ -9,6 +9,8 @@ namespace CookingRecipesPortal_Infrastructure.MappingConfigurations
         public MappingConfig()
         {
             CreateUserMappings();
+
+            CreateMap<Recipe, RecipeDto>().ReverseMap();
         }
 
         private void CreateUserMappings()

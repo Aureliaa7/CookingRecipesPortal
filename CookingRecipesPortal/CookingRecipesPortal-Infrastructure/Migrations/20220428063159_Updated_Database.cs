@@ -1,10 +1,11 @@
-﻿#nullable disable
-
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
 
 namespace CookingRecipesPortal_Infrastructure.Migrations
 {
-    public partial class Created_Database : Migration
+    public partial class Updated_Database : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +31,7 @@ namespace CookingRecipesPortal_Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Steps = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)

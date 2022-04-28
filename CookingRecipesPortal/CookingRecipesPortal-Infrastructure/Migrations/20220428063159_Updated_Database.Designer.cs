@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookingRecipesPortal_Infrastructure.Migrations
 {
     [DbContext(typeof(CookingRecipesPortalContext))]
-    [Migration("20220426104734_Created_Database")]
-    partial class Created_Database
+    [Migration("20220428063159_Updated_Database")]
+    partial class Updated_Database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
