@@ -50,5 +50,21 @@ namespace CookingRecipesPortal_API.Controllers
             await cookingRecipeService.DeleteAsync(userId, recipeId);
             return NoContent();
         }
+
+        [HttpPost("{userId}/save/{recipeId}")]
+        [Authorize]
+        public async Task<IActionResult> MarkAsSavedRecipe([FromRoute] Guid userId, [FromRoute] Guid recipeId)
+        {
+            await cookingRecipeService.SaveRecipeAsync(userId, recipeId);
+            return Ok();
+        }
+
+        [HttpPost("{userId}/like/{recipeId}")]
+        [Authorize]
+        public async Task<IActionResult> MarkAsLikedRecipe([FromRoute] Guid userId, [FromRoute] Guid recipeId)
+        {
+            await cookingRecipeService.LikeRecipeAsync(userId, recipeId);
+            return Ok();
+        }
     }
 }

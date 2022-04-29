@@ -38,7 +38,7 @@ namespace CookingRecipesPortal_DAL.Services
             bool userExists = await unitOfWork.UsersRepository.ExistsAsync(u => u.Email.Equals(user.Email));
             if (userExists)
             {
-                throw new DuplicateEmailException("A user with the same email already exists!");
+                throw new DuplicateEntityException("A user with the same email already exists!");
             }
 
             PasswordHelper.CreatePasswordHash(user.Password, out byte[] passwordHash, out byte[] passwordSalt);

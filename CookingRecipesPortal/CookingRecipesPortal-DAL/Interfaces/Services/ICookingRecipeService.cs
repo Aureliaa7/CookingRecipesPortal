@@ -12,5 +12,9 @@ namespace CookingRecipesPortal_DAL.Interfaces.Services
         Task<Recipe> UpdateAsync(Guid authorId, UpdateRecipeModel updatedRecipe);
 
         Task DeleteAsync(Guid authorId, Guid recipeId);
+
+        Task SaveRecipeAsync(Guid userId, Guid recipeId);
+
+        Task LikeRecipeAsync(Guid userId, Guid recipeId);
     }
 }

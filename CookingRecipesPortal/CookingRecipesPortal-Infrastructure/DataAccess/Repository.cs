@@ -91,7 +91,7 @@ namespace CookingRecipesPortal_Infrastructure.DataAccess
             return Task.FromResult(entities);
         }
 
-        public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> entities = DbContext.Set<T>().AsNoTracking();
 

@@ -1,4 +1,5 @@
 ﻿using CookingRecipesPortal_DAL.DomainModels;
+using CookingRecipesPortal_DAL.Enums;
 using CookingRecipesPortal_DAL.Exceptions;
 using CookingRecipesPortal_DAL.Interfaces.DataAccess;
 using CookingRecipesPortal_DAL.Interfaces.Services;
@@ -80,7 +81,78 @@ namespace CookingRecipesPortal_DAL.Services
             await CheckUserExistenceAsync(authorId);
             await CheckIfUserCanModifyRecipeAsync(authorId, recipeId);
 
+            // TODO first, delete all related UserRecipe entities
             await unitOfWork.RecipesRepository.RemoveAsync(recipeId);
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task SaveRecipeAsync(Guid userId, Guid recipeId)
+        {
+            await CheckIfUserRecipeEntityCanBeCreated(userId, recipeId, UserRecipeActionType.Save);
+
+            // maybe the user liked the recipe but did not save it and now wants to save it
+            await CreateOrUpdateUserRecipeEntityAsync(userId, recipeId, UserRecipeActionType.Save);
+        }
+
+        public async Task LikeRecipeAsync(Guid userId, Guid recipeId)
+        {
+            await CheckIfUserRecipeEntityCanBeCreated(userId, recipeId, UserRecipeActionType.Like);
+
+            await CreateOrUpdateUserRecipeEntityAsync(userId, recipeId, UserRecipeActionType.Like);
+        }
+
+        private async Task CheckIfUserRecipeEntityCanBeCreated(Guid userId, Guid recipeId, UserRecipeActionType actionType)
+        {
+            bool entityExists = await unitOfWork.UserRecipesRepository.ExistsAsync(
+               x => x.UserId == userId &&
+               x.RecipeId == recipeId &&
+               (x.ActionType == actionType || x.ActionType == UserRecipeActionType.SaveAndLike));
+            if (entityExists)
+            {
+                throw new DuplicateEntityException();
+            }
+
+            bool recipeExists = await unitOfWork.RecipesRepository.ExistsAsync(x => x.Id == recipeId);
+            if (!recipeExists)
+            {
+                throw new EntityNotFoundException($"No recipe with id {recipeId} was found!");
+            }
+
+            bool userExists = await unitOfWork.UsersRepository.ExistsAsync(x => x.Id == userId);
+            if (!userExists)
+            {
+                throw new EntityNotFoundException($"No user with id {userId} was found!");
+            }
+
+            bool userIsRecipeAuthor = await unitOfWork.RecipesRepository.ExistsAsync(x => x.Id == recipeId && x.AuthorId == userId);
+            if (userIsRecipeAuthor)
+            {
+                throw new ActionNotAllowedException("The author of a recipe cannot save their own recipes!");
+            }
+        }
+
+        private async Task CreateOrUpdateUserRecipeEntityAsync(Guid userId, Guid recipeId, UserRecipeActionType actionType)
+        {
+            var existingRecipe = await unitOfWork.UserRecipesRepository.GetFirstOrDefaultAsync(
+               x => x.UserId == userId &&
+               x.RecipeId == recipeId);
+
+            if (existingRecipe != null)
+            {
+                existingRecipe.ActionType = UserRecipeActionType.SaveAndLike;
+                await unitOfWork.UserRecipesRepository.UpdateAsync(existingRecipe);
+            }
+            else
+            {
+                var userRecipe = new UserRecipe
+                {
+                    RecipeId = recipeId,
+                    UserId = userId,
+                    ActionType = actionType
+                };
+
+                await unitOfWork.UserRecipesRepository.AddAsync(userRecipe);
+            }
             await unitOfWork.SaveChangesAsync();
         }
     }

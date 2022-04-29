@@ -8,7 +8,7 @@ namespace CookingRecipesPortal_API.Filters
     {
         public override void OnException(ExceptionContext context)
         {
-            if (context.Exception is DuplicateEmailException)
+            if (context.Exception is DuplicateEntityException)
             {
                 context.Result = new ConflictResult();
             }

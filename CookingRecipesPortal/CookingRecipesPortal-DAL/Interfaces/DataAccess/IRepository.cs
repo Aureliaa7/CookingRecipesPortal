@@ -22,6 +22,6 @@ namespace CookingRecipesPortal_DAL.Interfaces.DataAccess
             int? skip = null,
             int? take = null);
 
-        Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
+        Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
     }
 }

@@ -12,7 +12,9 @@ namespace CookingRecipesPortal_Infrastructure.AppDbContext
 
         public DbSet<User> AppUsers { get; set; }
         
-       public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
+
+        public DbSet<UserRecipe> UserRecipes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

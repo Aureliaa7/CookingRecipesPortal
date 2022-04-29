@@ -8,6 +8,8 @@ namespace CookingRecipesPortal_DAL.Interfaces.DataAccess
 
         IRepository<Recipe> RecipesRepository { get; }
 
+        IRepository<UserRecipe> UserRecipesRepository { get; }
+
         Task SaveChangesAsync();
     }
 }
