@@ -26,17 +26,44 @@ namespace CookingRecipesPortal_DAL.Services
             return savedRecipe;
         }
 
-        public async Task<IList<Recipe>> GetByAuthorAsync(Guid authorId)
+        public async Task<IList<RecipeModel>> GetByAuthorAsync(Guid authorId)
         {
             await CheckUserExistenceAsync(authorId);
 
             var recipes = (await unitOfWork.RecipesRepository.GetAllAsync(
                 x => x.AuthorId == authorId)).ToList();
 
-            return recipes;
+
+            // TODO extract this into a method(it will also be needed to get all the saved recipes of a user)
+            var recipeModels = new List<RecipeModel>();
+
+            foreach (var recipe in recipes)
+            {
+                recipeModels.Add(new RecipeModel
+                {
+                    Id = recipe.Id,
+                    Name = recipe.Name,
+                    AuthorId = authorId,
+                    Description = recipe.Description,
+                    Ingredients = recipe.Ingredients,
+                    Steps = recipe.Steps,
+                    NoLikes = await GetNoLikesForRecipeAsync(recipe.Id)
+            });  
+            }
+
+            return recipeModels;
         }
 
-        public async Task<Recipe> UpdateAsync(Guid authorId, UpdateRecipeModel updatedRecipe)
+        private async Task<int> GetNoLikesForRecipeAsync(Guid recipeId)
+        {
+            int noLikes = (await unitOfWork.UserRecipesRepository.GetAllAsync(
+                    x => x.RecipeId == recipeId &&
+                    (x.ActionType == UserRecipeActionType.Like || x.ActionType == UserRecipeActionType.SaveAndLike)))
+                    .Count();
+            return noLikes;
+        }
+
+        public async Task<RecipeModel> UpdateAsync(Guid authorId, UpdateRecipeModel updatedRecipe)
         {
             await CheckUserExistenceAsync(authorId);
             await CheckIfUserCanModifyRecipeAsync(authorId, updatedRecipe.Id);
@@ -53,7 +80,17 @@ namespace CookingRecipesPortal_DAL.Services
 
             await unitOfWork.RecipesRepository.UpdateAsync(recipe);
             await unitOfWork.SaveChangesAsync();
-            return recipe;
+
+            return new RecipeModel
+            {
+                Id = updatedRecipe.Id,
+                Description = updatedRecipe.Description,
+                Name = updatedRecipe.Name,
+                Ingredients = updatedRecipe.Ingredients,
+                Steps = updatedRecipe.Steps,
+                AuthorId = authorId,
+                NoLikes = await GetNoLikesForRecipeAsync(updatedRecipe.Id)
+            };
         }
 
         private async Task CheckIfUserCanModifyRecipeAsync(Guid authorId, Guid recipeId)

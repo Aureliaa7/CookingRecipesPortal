@@ -7,9 +7,9 @@ namespace CookingRecipesPortal_DAL.Interfaces.Services
     {
         Task<Recipe> AddAsync(Guid authorId, Recipe recipe);
 
-        Task<IList<Recipe>> GetByAuthorAsync(Guid authorId);
+        Task<IList<RecipeModel>> GetByAuthorAsync(Guid authorId);
 
-        Task<Recipe> UpdateAsync(Guid authorId, UpdateRecipeModel updatedRecipe);
+        Task<RecipeModel> UpdateAsync(Guid authorId, UpdateRecipeModel updatedRecipe);
 
         Task DeleteAsync(Guid authorId, Guid recipeId);
 

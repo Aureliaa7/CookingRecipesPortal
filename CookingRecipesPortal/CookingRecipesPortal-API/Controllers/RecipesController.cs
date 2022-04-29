@@ -32,7 +32,7 @@ namespace CookingRecipesPortal_API.Controllers
         public async Task<IActionResult> GetAll([FromRoute] Guid userId)
         {
             var recipes = await cookingRecipeService.GetByAuthorAsync(userId);
-            return Ok(mapper.Map<IList<RecipeDto>>(recipes));
+            return Ok(recipes);
         }
 
         [HttpPut("{userId}/edit")]
@@ -40,7 +40,7 @@ namespace CookingRecipesPortal_API.Controllers
         public async Task<IActionResult> EditRecipe([FromRoute] Guid userId, [FromBody] UpdateRecipeModel updatedRecipe)
         {
             var recipe = await cookingRecipeService.UpdateAsync(userId, updatedRecipe);
-            return Ok(mapper.Map<RecipeDto>(recipe));
+            return Ok(recipe);
         }
 
         [HttpDelete("{userId}/delete/{recipeId}")]
