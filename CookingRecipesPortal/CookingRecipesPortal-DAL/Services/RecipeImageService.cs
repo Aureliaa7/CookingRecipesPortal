@@ -46,7 +46,7 @@ namespace CookingRecipesPortal_DAL.Services
 
         public async Task SaveRecipeImagesAsync(IList<string> base64Images, Guid recipeId)
         {
-            var imagesNames = await imageService.SaveImagesAsync(base64Images);
+            var imagesNames = await imageService.SaveImagesAsync(base64Images, Constants.ImagesPath);
             foreach (var image in imagesNames)
             {
                 await unitOfWork.RecipeImagesRepository.AddAsync(

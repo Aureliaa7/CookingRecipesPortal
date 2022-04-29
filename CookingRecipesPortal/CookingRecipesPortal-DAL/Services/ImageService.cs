@@ -19,25 +19,24 @@ namespace CookingRecipesPortal_DAL.Services
             }
         }
 
-        public async Task<IList<string>> SaveImagesAsync(IList<string> base64Images)
+        public async Task<IList<string>> SaveImagesAsync(IList<string> base64Images, string destinationPath)
         {
             var imagesNames = new List<string>();
 
             foreach (var image in base64Images)
             {
-                imagesNames.Add(await SaveImageInFolderAsync(image));
+                imagesNames.Add(await SaveImageInFolderAsync(image, destinationPath));
             }
 
             return imagesNames;
         }
 
-        private async Task<string> SaveImageInFolderAsync(string imageBase64)
+        private async Task<string> SaveImageInFolderAsync(string imageBase64, string destinationPath)
         {
-            string imageFolder = Constants.ImagesPath;
             // let it be a simple GUID since the base64 string doesn't contain the file name and the file name is not important
             //TODO get the image extension from FE instead of using the one from Constants
             string fileName = Guid.NewGuid().ToString() + Constants.ImageExtension;
-            string filePath = Path.Combine(imageFolder, fileName);
+            string filePath = Path.Combine(destinationPath, fileName);
             byte[] imageBytes = Convert.FromBase64String(imageBase64);
             await File.WriteAllBytesAsync(filePath, imageBytes);
 
