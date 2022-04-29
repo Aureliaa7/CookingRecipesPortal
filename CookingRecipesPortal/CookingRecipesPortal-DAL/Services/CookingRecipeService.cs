@@ -76,12 +76,30 @@ namespace CookingRecipesPortal_DAL.Services
             }
         }
 
+        private async Task CheckRecipeExistenceAsync(Guid recipeId)
+        {
+            bool recipeExists = await unitOfWork.RecipesRepository.ExistsAsync(x => x.Id == recipeId);
+            if (!recipeExists)
+            {
+                throw new EntityNotFoundException($"The recipe with id {recipeId} was not found!");
+            }
+        }
+
         public async Task DeleteAsync(Guid authorId, Guid recipeId)
         {
+            await CheckRecipeExistenceAsync(recipeId);
             await CheckUserExistenceAsync(authorId);
             await CheckIfUserCanModifyRecipeAsync(authorId, recipeId);
 
-            // TODO first, delete all related UserRecipe entities
+            var userRecipes = await unitOfWork.UserRecipesRepository.GetAllAsync(x => x.RecipeId == recipeId);
+            if (userRecipes.Any())
+            {
+                foreach (var userRecipe in userRecipes)
+                {
+                    await unitOfWork.UserRecipesRepository.RemoveAsync(userRecipe);
+                }
+            }
+
             await unitOfWork.RecipesRepository.RemoveAsync(recipeId);
             await unitOfWork.SaveChangesAsync();
         }
@@ -112,17 +130,8 @@ namespace CookingRecipesPortal_DAL.Services
                 throw new DuplicateEntityException();
             }
 
-            bool recipeExists = await unitOfWork.RecipesRepository.ExistsAsync(x => x.Id == recipeId);
-            if (!recipeExists)
-            {
-                throw new EntityNotFoundException($"No recipe with id {recipeId} was found!");
-            }
-
-            bool userExists = await unitOfWork.UsersRepository.ExistsAsync(x => x.Id == userId);
-            if (!userExists)
-            {
-                throw new EntityNotFoundException($"No user with id {userId} was found!");
-            }
+            await CheckRecipeExistenceAsync(recipeId);
+            await CheckUserExistenceAsync(userId);
 
             bool userIsRecipeAuthor = await unitOfWork.RecipesRepository.ExistsAsync(x => x.Id == recipeId && x.AuthorId == userId);
             if (userIsRecipeAuthor)
