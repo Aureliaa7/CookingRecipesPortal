@@ -155,5 +155,50 @@ namespace CookingRecipesPortal_DAL.Services
             }
             await unitOfWork.SaveChangesAsync();
         }
+
+        public async Task RemoveFromSavedRecipesAsync(Guid userId, Guid recipeId)
+        {
+            await RemoveSpecificActionTypeFromUserRecipeAsync(userId, recipeId, UserRecipeActionType.Save);
+        }
+
+        public async Task RemoveFromLikedRecipesAsync(Guid userId, Guid recipeId)
+        {
+            await RemoveSpecificActionTypeFromUserRecipeAsync(userId, recipeId, UserRecipeActionType.Like);
+        }
+
+        private async Task RemoveSpecificActionTypeFromUserRecipeAsync(Guid userId, Guid recipeId, UserRecipeActionType actionType)
+        {
+            bool updatedActionType = await UpdateRecipeActionTypeAsync(userId, recipeId, actionType);
+            if (!updatedActionType)
+            {
+                var userRecipe = await unitOfWork.UserRecipesRepository.GetFirstOrDefaultAsync(
+                    x => x.UserId == userId && x.RecipeId == recipeId);
+                await unitOfWork.UserRecipesRepository.RemoveAsync(userRecipe);
+                await unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        private async Task<bool> UpdateRecipeActionTypeAsync(Guid userId, Guid recipeId, UserRecipeActionType actionType)
+        {
+            var userRecipe = await unitOfWork.UserRecipesRepository.GetFirstOrDefaultAsync(
+                x => x.UserId == userId && x.RecipeId == recipeId &&
+                (x.ActionType == actionType || x.ActionType == UserRecipeActionType.SaveAndLike));
+
+            if (userRecipe == null)
+            {
+                throw new EntityNotFoundException($"UserRecipe with userId {userId} and recipeId {recipeId} was not found!");
+            }
+
+            if (userRecipe.ActionType == UserRecipeActionType.SaveAndLike)
+            {
+                userRecipe.ActionType = actionType == UserRecipeActionType.Save ? UserRecipeActionType.Like : UserRecipeActionType.Save;
+                await unitOfWork.UserRecipesRepository.UpdateAsync(userRecipe);
+                await unitOfWork.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }

@@ -66,5 +66,22 @@ namespace CookingRecipesPortal_API.Controllers
             await cookingRecipeService.LikeRecipeAsync(userId, recipeId);
             return Ok();
         }
+
+
+        [HttpDelete("{userId}/remove-like/{recipeId}")]
+        [Authorize]
+        public async Task<IActionResult> RemoveFromLikedRecipes([FromRoute] Guid userId, [FromRoute] Guid recipeId)
+        {
+            await cookingRecipeService.RemoveFromLikedRecipesAsync(userId, recipeId);
+            return Ok();
+        }
+
+        [HttpDelete("{userId}/remove-from-saved-recipes/{recipeId}")]
+        [Authorize]
+        public async Task<IActionResult> RemoveFromSavedRecipes([FromRoute] Guid userId, [FromRoute] Guid recipeId)
+        {
+            await cookingRecipeService.RemoveFromSavedRecipesAsync(userId, recipeId);
+            return Ok();
+        }
     }
 }
