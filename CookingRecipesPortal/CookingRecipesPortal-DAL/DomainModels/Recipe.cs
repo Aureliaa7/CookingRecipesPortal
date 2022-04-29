@@ -17,5 +17,7 @@ namespace CookingRecipesPortal_DAL.DomainModels
         public User Author { get; set; }
 
         public Guid AuthorId { get; set; }
+
+        public DateTime PublishingDate { get; set; }
     }
 }

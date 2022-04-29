@@ -10,6 +10,7 @@ namespace CookingRecipesPortal_Infrastructure.DataAccess
         private readonly IRepository<User> usersRepository;
         private readonly IRepository<Recipe> recipesRepository;
         private readonly IRepository<UserRecipe> userRecipesRepository;
+        private readonly IRepository<RecipeImage> recipeImagesRepository;
 
         public UnitOfWork(CookingRecipesPortalContext dbContext)
         {
@@ -17,6 +18,7 @@ namespace CookingRecipesPortal_Infrastructure.DataAccess
             usersRepository = new Repository<User>(dbContext);
             recipesRepository = new Repository<Recipe>(dbContext);
             userRecipesRepository = new Repository<UserRecipe>(dbContext);
+            recipeImagesRepository = new Repository<RecipeImage>(dbContext);
         }
 
         public IRepository<User> UsersRepository
@@ -32,6 +34,11 @@ namespace CookingRecipesPortal_Infrastructure.DataAccess
         public IRepository<UserRecipe> UserRecipesRepository
         {
             get => userRecipesRepository;
+        }
+
+        public IRepository<RecipeImage> RecipeImagesRepository
+        {
+            get => recipeImagesRepository;
         }
 
         public async Task SaveChangesAsync()

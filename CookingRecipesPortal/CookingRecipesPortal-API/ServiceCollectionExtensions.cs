@@ -20,6 +20,8 @@ namespace CookingRecipesPortal_API
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICookingRecipeService, CookingRecipeService>();
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IRecipeImageService, RecipeImageService>();
         }
 
         public static void AddDbContext(this IServiceCollection services, string connectionString)

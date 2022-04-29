@@ -19,5 +19,10 @@ namespace CookingRecipesPortal_DAL.DTOs
 
         [Required]
         public string Steps { get; set; }
+
+        [Required]
+        public List<string> Base64Images { get; set; }
+
+        public DateTime PublishingDate { get; set; }
     }
 }

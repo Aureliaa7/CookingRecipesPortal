@@ -16,6 +16,8 @@ namespace CookingRecipesPortal_Infrastructure.AppDbContext
 
         public DbSet<UserRecipe> UserRecipes { get; set; }
 
+        public DbSet<RecipeImage> RecipeImages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

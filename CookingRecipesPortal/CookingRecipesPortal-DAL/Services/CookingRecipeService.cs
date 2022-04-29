@@ -10,18 +10,22 @@ namespace CookingRecipesPortal_DAL.Services
     public class CookingRecipeService : ICookingRecipeService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IRecipeImageService imageService;
 
-        public CookingRecipeService(IUnitOfWork unitOfWork)
+        public CookingRecipeService(IUnitOfWork unitOfWork, IRecipeImageService imageService)
         {
             this.unitOfWork = unitOfWork;
+            this.imageService = imageService;
         }
-        public async Task<Recipe> AddAsync(Guid authorId, Recipe recipe)
+        public async Task<Recipe> AddAsync(Guid authorId, Recipe recipe, IList<string> base64Images)
         {
             await CheckUserExistenceAsync(authorId);
 
             recipe.AuthorId = authorId;
+            recipe.PublishingDate = DateTime.Now;
             var savedRecipe = await unitOfWork.RecipesRepository.AddAsync(recipe);
             await unitOfWork.SaveChangesAsync();
+            await imageService.SaveRecipeImagesAsync(base64Images, savedRecipe.Id);
 
             return savedRecipe;
         }
@@ -47,7 +51,9 @@ namespace CookingRecipesPortal_DAL.Services
                     Description = recipe.Description,
                     Ingredients = recipe.Ingredients,
                     Steps = recipe.Steps,
-                    NoLikes = await GetNoLikesForRecipeAsync(recipe.Id)
+                    NoLikes = await GetNoLikesForRecipeAsync(recipe.Id),
+                    PublishingDate = recipe.PublishingDate,
+                    Images = await imageService.GetRecipeImagesAsync(recipe.Id)
             });  
             }
 
@@ -128,6 +134,8 @@ namespace CookingRecipesPortal_DAL.Services
             await CheckUserExistenceAsync(authorId);
             await CheckIfUserCanModifyRecipeAsync(authorId, recipeId);
 
+            await imageService.DeleteRecipeImagesAsync(recipeId);
+
             var userRecipes = await unitOfWork.UserRecipesRepository.GetAllAsync(x => x.RecipeId == recipeId);
             if (userRecipes.Any())
             {
@@ -146,7 +154,10 @@ namespace CookingRecipesPortal_DAL.Services
             await CheckIfUserRecipeEntityCanBeCreated(userId, recipeId, UserRecipeActionType.Save);
 
             // maybe the user liked the recipe but did not save it and now wants to save it
-            await CreateOrUpdateUserRecipeEntityAsync(userId, recipeId, UserRecipeActionType.Save);
+            var savedUserRecipe = await CreateOrUpdateUserRecipeEntityAsync(userId, recipeId, UserRecipeActionType.Save);
+            savedUserRecipe.SavingTime = DateTime.Now;
+            await unitOfWork.UserRecipesRepository.UpdateAsync(savedUserRecipe);
+            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task LikeRecipeAsync(Guid userId, Guid recipeId)
@@ -177,7 +188,7 @@ namespace CookingRecipesPortal_DAL.Services
             }
         }
 
-        private async Task CreateOrUpdateUserRecipeEntityAsync(Guid userId, Guid recipeId, UserRecipeActionType actionType)
+        private async Task<UserRecipe> CreateOrUpdateUserRecipeEntityAsync(Guid userId, Guid recipeId, UserRecipeActionType actionType)
         {
             var existingRecipe = await unitOfWork.UserRecipesRepository.GetFirstOrDefaultAsync(
                x => x.UserId == userId &&
@@ -187,6 +198,8 @@ namespace CookingRecipesPortal_DAL.Services
             {
                 existingRecipe.ActionType = UserRecipeActionType.SaveAndLike;
                 await unitOfWork.UserRecipesRepository.UpdateAsync(existingRecipe);
+                await unitOfWork.SaveChangesAsync();
+                return existingRecipe;
             }
             else
             {
@@ -198,13 +211,22 @@ namespace CookingRecipesPortal_DAL.Services
                 };
 
                 await unitOfWork.UserRecipesRepository.AddAsync(userRecipe);
+                await unitOfWork.SaveChangesAsync();
+                return userRecipe;
             }
-            await unitOfWork.SaveChangesAsync();
         }
 
         public async Task RemoveFromSavedRecipesAsync(Guid userId, Guid recipeId)
         {
             await RemoveSpecificActionTypeFromUserRecipeAsync(userId, recipeId, UserRecipeActionType.Save);
+            var userRecipe = await unitOfWork.UserRecipesRepository.GetFirstOrDefaultAsync(
+                x => x.UserId == userId && x.RecipeId == recipeId);
+            if (userRecipe != null)
+            {
+                userRecipe.SavingTime = null;
+                await unitOfWork.UserRecipesRepository.UpdateAsync(userRecipe);
+                await unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task RemoveFromLikedRecipesAsync(Guid userId, Guid recipeId)

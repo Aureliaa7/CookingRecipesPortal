@@ -23,7 +23,7 @@ namespace CookingRecipesPortal_API.Controllers
         [Authorize]
         public async Task<IActionResult> CreateRecipe([FromRoute] Guid userId, RecipeDto recipe)
         {
-            var addedRecipe = await cookingRecipeService.AddAsync(userId, mapper.Map<Recipe>(recipe));
+            var addedRecipe = await cookingRecipeService.AddAsync(userId, mapper.Map<Recipe>(recipe), recipe.Base64Images);
             return Ok(mapper.Map<RecipeDto>(addedRecipe)); 
         }
 

@@ -15,5 +15,7 @@ namespace CookingRecipesPortal_DAL.DomainModels
         public User? User { get; set; }
 
         public UserRecipeActionType ActionType { get; set; }
+
+        public DateTime? SavingTime { get; set; }
     }
 }

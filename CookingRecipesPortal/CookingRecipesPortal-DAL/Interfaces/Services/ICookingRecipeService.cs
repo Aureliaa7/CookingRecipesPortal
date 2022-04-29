@@ -5,7 +5,7 @@ namespace CookingRecipesPortal_DAL.Interfaces.Services
 {
     public interface ICookingRecipeService
     {
-        Task<Recipe> AddAsync(Guid authorId, Recipe recipe);
+        Task<Recipe> AddAsync(Guid authorId, Recipe recipe, IList<string> base64Images);
 
         Task<IList<RecipeModel>> GetByAuthorAsync(Guid authorId);
 

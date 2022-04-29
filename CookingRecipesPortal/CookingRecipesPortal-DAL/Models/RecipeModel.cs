@@ -17,5 +17,9 @@
         public Guid AuthorId { get; set; }
 
         public int NoLikes { get; set; }
+
+        public DateTime PublishingDate { get; set; }
+
+        public IList<byte[]> Images { get; set; }
     }
 }
