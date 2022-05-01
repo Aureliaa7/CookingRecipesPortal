@@ -9,16 +9,18 @@ namespace CookingRecipesPortal_Infrastructure.DataAccess
         private readonly CookingRecipesPortalContext dbContext;
         private readonly IRepository<User> usersRepository;
         private readonly IRepository<Recipe> recipesRepository;
-        private readonly IRepository<UserRecipe> userRecipesRepository;
+        private readonly IRepository<LikedSavedRecipe> likedSavedRecipesRepository;
         private readonly IRepository<RecipeImage> recipeImagesRepository;
+        private readonly IRepository<FollowerFollowee> followerFolloweeRepository;
 
         public UnitOfWork(CookingRecipesPortalContext dbContext)
         {
             this.dbContext = dbContext;
             usersRepository = new Repository<User>(dbContext);
             recipesRepository = new Repository<Recipe>(dbContext);
-            userRecipesRepository = new Repository<UserRecipe>(dbContext);
+            likedSavedRecipesRepository = new Repository<LikedSavedRecipe>(dbContext);
             recipeImagesRepository = new Repository<RecipeImage>(dbContext);
+            followerFolloweeRepository = new Repository<FollowerFollowee>(dbContext);
         }
 
         public IRepository<User> UsersRepository
@@ -31,14 +33,19 @@ namespace CookingRecipesPortal_Infrastructure.DataAccess
             get => recipesRepository;
         }
 
-        public IRepository<UserRecipe> UserRecipesRepository
+        public IRepository<LikedSavedRecipe> LikedSavedRecipes
         {
-            get => userRecipesRepository;
+            get => likedSavedRecipesRepository;
         }
 
         public IRepository<RecipeImage> RecipeImagesRepository
         {
             get => recipeImagesRepository;
+        }
+
+        public IRepository<FollowerFollowee> FollowerFolloweesRepository
+        {
+            get => followerFolloweeRepository;
         }
 
         public async Task SaveChangesAsync()

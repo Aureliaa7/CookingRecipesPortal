@@ -14,9 +14,11 @@ namespace CookingRecipesPortal_Infrastructure.AppDbContext
         
         public DbSet<Recipe> Recipes { get; set; }
 
-        public DbSet<UserRecipe> UserRecipes { get; set; }
+        public DbSet<LikedSavedRecipe> LikedSavedRecipes { get; set; }
 
         public DbSet<RecipeImage> RecipeImages { get; set; }
+
+        public DbSet<FollowerFollowee> FollowerFollowees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -2,7 +2,7 @@
 
 namespace CookingRecipesPortal_DAL.DomainModels
 {
-    public class UserRecipe
+    public class LikedSavedRecipe
     {
         public Guid Id { get; set; }
 
