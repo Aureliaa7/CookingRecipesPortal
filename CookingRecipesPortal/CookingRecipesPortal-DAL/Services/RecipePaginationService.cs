@@ -18,9 +18,15 @@ namespace CookingRecipesPortal_DAL.Services
             this.imageService = imageService;
         }
 
-        public override async Task<PagedResponseModel<RecipeModel>> GetPagedResponseAsync(
+        public override Task<PagedResponseModel<RecipeModel>> GetPagedResponseAsync(
             PaginationFilter paginationFilter, 
             Expression<Func<Recipe, bool>>? filter = null)
+        {
+            return GetPagedRecipesAsync(paginationFilter, filter);  
+        }
+
+        private async Task<PagedResponseModel<RecipeModel>> GetPagedRecipesAsync(
+            PaginationFilter paginationFilter, Expression<Func<Recipe, bool>>? filter = null)
         {
             int totalRecords = await unitOfWork.RecipesRepository.GetTotalRecordsAsync(filter);
 
@@ -59,11 +65,31 @@ namespace CookingRecipesPortal_DAL.Services
 
         private async Task<int> GetNoLikesForRecipeAsync(Guid recipeId)
         {
-            int noLikes = (await unitOfWork.LikedSavedRecipes.GetAllAsync(
+            int noLikes = (await unitOfWork.LikedSavedRecipesRepository.GetAllAsync(
                     x => x.RecipeId == recipeId &&
                     (x.ActionType == UserRecipeActionType.Like || x.ActionType == UserRecipeActionType.SaveAndLike)))
                     .Count();
             return noLikes;
+        }
+
+        public async Task<PagedResponseModel<RecipeModel>> GetSavedRecipesAsync(
+            Guid userId, PaginationFilter paginationFilter)
+        {
+            Expression<Func<LikedSavedRecipe, bool>> savedRecipesFilter = x => x.UserId == userId &&
+            (x.ActionType == UserRecipeActionType.Save || x.ActionType == UserRecipeActionType.SaveAndLike);
+
+            var savedRecipesIds = (await unitOfWork.LikedSavedRecipesRepository.GetAllAsync(
+                savedRecipesFilter, 
+                skip: (paginationFilter.PageNumber - 1) * paginationFilter.PageSize,
+                take: paginationFilter.PageSize))
+                .Select(x => x.RecipeId)
+                .ToList();
+
+            int totalRecords = await unitOfWork.LikedSavedRecipesRepository.GetTotalRecordsAsync(savedRecipesFilter);
+
+            Expression<Func<Recipe, bool>> recipesFilter = x => savedRecipesIds.Contains(x.Id);
+
+            return await GetPagedRecipesAsync(paginationFilter, recipesFilter);          
         }
     }
 }

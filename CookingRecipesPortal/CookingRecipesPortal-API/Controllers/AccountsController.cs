@@ -50,41 +50,40 @@ namespace CookingRecipesPortal_API.Controllers
         [Route("{followerId}/follow/{followeeId}")]
         public async Task<IActionResult> FollowAccount([FromRoute] Guid followerId, Guid followeeId)
         {
-            await Task.Delay(0);
+            await accountService.FollowAccountAsync(followerId, followeeId);
             return Ok();
         }
 
         [HttpDelete]
-        [Route("{followerId}/follow/{followeeId}")]
+        [Route("{followerId}/unfollow/{followeeId}")]
         public async Task<IActionResult> UnfollowAccount([FromRoute] Guid followerId, Guid followeeId)
         {
-            await Task.Delay(0);
+            await accountService.UnfollowAccountAsync(followerId, followeeId);
             return Ok();
         }
 
         [HttpGet]
-        [Route("{userId}/accounts")]
-        public async Task<IActionResult> ViewAccounts([FromRoute] Guid userId, [FromQuery] PaginationFilter filter)
+        [Route("{userId}/all-accounts")]
+        public async Task<IActionResult> ViewAccounts([FromRoute] Guid userId, [FromQuery] int pageSize, [FromQuery] int pageNumber)
         {
-            await Task.Delay(0);
-            return Ok();
+            var pagedResponse = await accountService.GetAccountsAsync(new PaginationFilter(pageNumber, pageSize), userId);
+            return Ok(pagedResponse);
         }
 
         [HttpGet]
         [Route("{userId}/followees")]
-        public async Task<IActionResult> ViewFollowees([FromRoute] Guid userId, [FromQuery] PaginationFilter filter)
+        public async Task<IActionResult> ViewFollowees([FromRoute] Guid userId, [FromQuery] int pageSize, [FromQuery] int pageNumber)
         {
-            await Task.Delay(0);
-            return Ok();
+            var pagedResponse = await accountService.GetFolloweesAsync(userId, new PaginationFilter(pageNumber, pageSize));
+            return Ok(pagedResponse);
         }
-
 
         [HttpGet]
         [Route("{userId}")]
-        public async Task<IActionResult> ViewAccount([FromRoute] Guid userId)
+        public async Task<IActionResult> GetAccountInfo([FromRoute] Guid userId)
         {
-            await Task.Delay(0);
-            return Ok();
+            var userModel = await accountService.GetAccountInfoAsync(userId);
+            return Ok(userModel);
         }
     }
 }

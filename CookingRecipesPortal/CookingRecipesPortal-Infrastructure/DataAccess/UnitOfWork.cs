@@ -33,7 +33,7 @@ namespace CookingRecipesPortal_Infrastructure.DataAccess
             get => recipesRepository;
         }
 
-        public IRepository<LikedSavedRecipe> LikedSavedRecipes
+        public IRepository<LikedSavedRecipe> LikedSavedRecipesRepository
         {
             get => likedSavedRecipesRepository;
         }

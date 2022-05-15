@@ -24,7 +24,6 @@ namespace CookingRecipesPortal_API
             services.AddScoped<IRecipeImageService, RecipeImageService>();
             services.AddScoped<IAccountPaginationService, AccountPaginationService>();
             services.AddScoped<IRecipePaginationService, RecipePaginationService>();
-            services.AddScoped<ILikedSavedRecipePaginationService, LikedSavedRecipePaginationService>();
         }
 
         public static void AddDbContext(this IServiceCollection services, string connectionString)

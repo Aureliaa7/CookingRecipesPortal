@@ -15,8 +15,27 @@ namespace CookingRecipesPortal_DAL.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async override Task<PagedResponseModel<UserModel>> GetPagedResponseAsync(
+        public async Task<PagedResponseModel<UserModel>> GetFollowedAccountsAsync(
+            Guid userId, PaginationFilter paginationFilter)
+        {
+            var followedUsersIds = (await unitOfWork.FollowerFolloweesRepository.GetAllAsync(
+                x => x.FollowerId == userId))
+                .Select(x => x.FolloweeId)
+                .ToList();
+
+            Expression<Func<User, bool>> filter = x => followedUsersIds.Contains(x.Id);
+            return await GetUsersAsync(paginationFilter, filter);
+        }
+
+        public override Task<PagedResponseModel<UserModel>> GetPagedResponseAsync(
             PaginationFilter paginationFilter, 
+            Expression<Func<User, bool>>? filter = null)
+        {
+            return GetUsersAsync(paginationFilter, filter);
+        }
+
+        private async Task<PagedResponseModel<UserModel>> GetUsersAsync(
+            PaginationFilter paginationFilter,
             Expression<Func<User, bool>>? filter = null)
         {
             int totalRecords = await unitOfWork.UsersRepository.GetTotalRecordsAsync(filter);

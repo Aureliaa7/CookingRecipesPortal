@@ -8,7 +8,7 @@ namespace CookingRecipesPortal_DAL.Interfaces.DataAccess
 
         IRepository<Recipe> RecipesRepository { get; }
 
-        IRepository<LikedSavedRecipe> LikedSavedRecipes { get; }
+        IRepository<LikedSavedRecipe> LikedSavedRecipesRepository { get; }
 
         IRepository<RecipeImage> RecipeImagesRepository { get; }
 
