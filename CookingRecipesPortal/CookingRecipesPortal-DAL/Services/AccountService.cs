@@ -12,13 +12,16 @@ namespace CookingRecipesPortal_DAL.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IJwtService jwtService;
+        private readonly IAccountPaginationService accountPaginationService;
 
         public AccountService(
             IUnitOfWork unitOfWork,
-            IJwtService jwtService)
+            IJwtService jwtService,
+            IAccountPaginationService accountPaginationService)
         {
             this.unitOfWork = unitOfWork;
             this.jwtService = jwtService;
+            this.accountPaginationService = accountPaginationService;
         }
 
         public async Task<string> LoginAsync(LoginDto loginDto)

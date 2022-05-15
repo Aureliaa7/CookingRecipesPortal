@@ -4,5 +4,8 @@
     {
         public const string ImagesPath = "C:\\Users\\Aura.LAPTOP-GLQOS0K8\\Desktop\\CookingRecipesPortalImages";
         public const string ImageExtension = ".png";
+
+        public const int DefaultPageSize = 20;
+        public const int DefaultPageNumber = 1;
     }
 }

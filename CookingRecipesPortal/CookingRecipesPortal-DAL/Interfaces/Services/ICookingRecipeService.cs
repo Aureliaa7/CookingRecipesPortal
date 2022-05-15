@@ -7,7 +7,7 @@ namespace CookingRecipesPortal_DAL.Interfaces.Services
     {
         Task<Recipe> AddAsync(Guid authorId, Recipe recipe, IList<string> base64Images);
 
-        Task<IList<RecipeModel>> GetByAuthorAsync(Guid authorId);
+        Task<PagedResponseModel<RecipeModel>> GetByAuthorAsync(Guid authorId, PaginationFilter paginationFilter);
 
         Task<RecipeModel> UpdateAsync(Guid authorId, UpdateRecipeModel updatedRecipe);
 
@@ -20,5 +20,7 @@ namespace CookingRecipesPortal_DAL.Interfaces.Services
         Task RemoveFromSavedRecipesAsync(Guid userId, Guid recipeId);
 
         Task RemoveFromLikedRecipesAsync(Guid userId, Guid recipeId);
+
+        Task<PagedResponseModel<RecipeModel>> GetSavedRecipesAsync(Guid userId, PaginationFilter paginationFilter);
     }
 }

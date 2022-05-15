@@ -2,6 +2,7 @@
 using CookingRecipesPortal_DAL.DomainModels;
 using CookingRecipesPortal_DAL.DTOs;
 using CookingRecipesPortal_DAL.Interfaces.Services;
+using CookingRecipesPortal_DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CookingRecipesPortal_API.Controllers
@@ -43,6 +44,47 @@ namespace CookingRecipesPortal_API.Controllers
         public IActionResult Test()
         {
             return Ok("Hello!");
+        }
+
+        [HttpPost]
+        [Route("{followerId}/follow/{followeeId}")]
+        public async Task<IActionResult> FollowAccount([FromRoute] Guid followerId, Guid followeeId)
+        {
+            await Task.Delay(0);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{followerId}/follow/{followeeId}")]
+        public async Task<IActionResult> UnfollowAccount([FromRoute] Guid followerId, Guid followeeId)
+        {
+            await Task.Delay(0);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("{userId}/accounts")]
+        public async Task<IActionResult> ViewAccounts([FromRoute] Guid userId, [FromQuery] PaginationFilter filter)
+        {
+            await Task.Delay(0);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("{userId}/followees")]
+        public async Task<IActionResult> ViewFollowees([FromRoute] Guid userId, [FromQuery] PaginationFilter filter)
+        {
+            await Task.Delay(0);
+            return Ok();
+        }
+
+
+        [HttpGet]
+        [Route("{userId}")]
+        public async Task<IActionResult> ViewAccount([FromRoute] Guid userId)
+        {
+            await Task.Delay(0);
+            return Ok();
         }
     }
 }

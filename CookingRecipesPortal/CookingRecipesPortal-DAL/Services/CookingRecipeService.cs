@@ -4,6 +4,7 @@ using CookingRecipesPortal_DAL.Exceptions;
 using CookingRecipesPortal_DAL.Interfaces.DataAccess;
 using CookingRecipesPortal_DAL.Interfaces.Services;
 using CookingRecipesPortal_DAL.Models;
+using System.Linq.Expressions;
 
 namespace CookingRecipesPortal_DAL.Services
 {
@@ -11,11 +12,18 @@ namespace CookingRecipesPortal_DAL.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IRecipeImageService imageService;
+        private readonly IRecipePaginationService paginationService;
+        private readonly ILikedSavedRecipePaginationService savedRecipePaginationService;
 
-        public CookingRecipeService(IUnitOfWork unitOfWork, IRecipeImageService imageService)
+        public CookingRecipeService(IUnitOfWork unitOfWork, 
+            IRecipeImageService imageService,
+            IRecipePaginationService paginationService,
+            ILikedSavedRecipePaginationService savedRecipePaginationService)
         {
             this.unitOfWork = unitOfWork;
             this.imageService = imageService;
+            this.paginationService = paginationService;
+            this.savedRecipePaginationService = savedRecipePaginationService;
         }
         public async Task<Recipe> AddAsync(Guid authorId, Recipe recipe, IList<string> base64Images)
         {
@@ -30,34 +38,15 @@ namespace CookingRecipesPortal_DAL.Services
             return savedRecipe;
         }
 
-        public async Task<IList<RecipeModel>> GetByAuthorAsync(Guid authorId)
+        public async Task<PagedResponseModel<RecipeModel>> GetByAuthorAsync(Guid authorId, PaginationFilter paginationFilter)
         {
             await CheckUserExistenceAsync(authorId);
 
-            var recipes = (await unitOfWork.RecipesRepository.GetAllAsync(
-                x => x.AuthorId == authorId)).ToList();
+            Expression<Func<Recipe, bool>> filter = x => x.AuthorId == authorId;
 
+            var recipes = await paginationService.GetPagedResponseAsync(paginationFilter, filter);
 
-            // TODO extract this into a method(it will also be needed to get all the saved recipes of a user)
-            var recipeModels = new List<RecipeModel>();
-
-            foreach (var recipe in recipes)
-            {
-                recipeModels.Add(new RecipeModel
-                {
-                    Id = recipe.Id,
-                    Name = recipe.Name,
-                    AuthorId = authorId,
-                    Description = recipe.Description,
-                    Ingredients = recipe.Ingredients,
-                    Steps = recipe.Steps,
-                    NoLikes = await GetNoLikesForRecipeAsync(recipe.Id),
-                    PublishingDate = recipe.PublishingDate,
-                    Images = await imageService.GetRecipeImagesAsync(recipe.Id)
-            });  
-            }
-
-            return recipeModels;
+            return recipes;
         }
 
         private async Task<int> GetNoLikesForRecipeAsync(Guid recipeId)
@@ -267,6 +256,45 @@ namespace CookingRecipesPortal_DAL.Services
             }
 
             return false;
+        }
+
+        public async Task<PagedResponseModel<RecipeModel>> GetSavedRecipesAsync(Guid userId, PaginationFilter paginationFilter)
+        {
+            Expression<Func<LikedSavedRecipe, bool>> filter = x => x.UserId == userId && 
+            (x.ActionType == UserRecipeActionType.Save || x.ActionType == UserRecipeActionType.SaveAndLike);
+
+            var savedRecipesPagedResponse = await savedRecipePaginationService.GetPagedResponseAsync(paginationFilter, filter);
+            var savedRecipesIds = savedRecipesPagedResponse.Data.Select(x => x.RecipeId).ToList();
+
+            var recipes = (await unitOfWork.RecipesRepository.GetAllAsync(x => savedRecipesIds.Contains(x.Id))).ToList();
+            var savedRecipes = new List<RecipeModel>();
+            
+            foreach (var recipe in recipes)
+            {
+                savedRecipes.Add(new RecipeModel
+                {
+                    AuthorId = recipe.Id,
+                    Description = recipe.Description,
+                    Id = recipe.Id,
+                    Ingredients = recipe.Ingredients,
+                    Name = recipe.Name,
+                    PublishingDate = recipe.PublishingDate,
+                    Steps = recipe.Steps,
+                    Images = await imageService.GetRecipeImagesAsync(recipe.Id),
+                    NoLikes = await GetNoLikesForRecipeAsync(recipe.Id)
+                });
+            }
+
+            var pagedResponse = new PagedResponseModel<RecipeModel>
+            {
+                Data = savedRecipes,
+                PageNumber = savedRecipesPagedResponse.PageNumber,
+                PageSize = savedRecipesPagedResponse.PageSize,
+                TotalPages = savedRecipesPagedResponse.TotalPages,
+                TotalRecords = savedRecipesPagedResponse.TotalRecords
+            };
+
+            return pagedResponse;
         }
     }
 }

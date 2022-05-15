@@ -29,9 +29,9 @@ namespace CookingRecipesPortal_API.Controllers
 
         [HttpGet("{userId}")]
         [Authorize]
-        public async Task<IActionResult> GetAll([FromRoute] Guid userId)
+        public async Task<IActionResult> GetRecipesByAuthor([FromRoute] Guid userId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
-            var recipes = await cookingRecipeService.GetByAuthorAsync(userId);
+            var recipes = await cookingRecipeService.GetByAuthorAsync(userId, new PaginationFilter(pageNumber, pageSize));
             return Ok(recipes);
         }
 
@@ -82,6 +82,14 @@ namespace CookingRecipesPortal_API.Controllers
         {
             await cookingRecipeService.RemoveFromSavedRecipesAsync(userId, recipeId);
             return Ok();
+        }
+
+        [HttpGet("{userId}/saved-recipes")]
+        [Authorize]
+        public async Task<IActionResult> ViewSavedRecipes([FromRoute] Guid userId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            var savedRecipes = await cookingRecipeService.GetSavedRecipesAsync(userId, new PaginationFilter(pageNumber, pageSize));
+            return Ok(savedRecipes);
         }
     }
 }

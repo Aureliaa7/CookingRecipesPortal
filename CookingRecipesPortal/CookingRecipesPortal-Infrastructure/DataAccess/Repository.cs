@@ -118,5 +118,15 @@ namespace CookingRecipesPortal_Infrastructure.DataAccess
 
             return entities;
         }
+
+        public Task<int> GetTotalRecordsAsync(Expression<Func<T, bool>> filter = null)
+        {
+            if (filter != null)
+            {
+                return Task.FromResult(DbContext.Set<T>().Where(filter).Count());
+            }
+
+            return Task.FromResult(DbContext.Set<T>().Count());
+        }
     }
 }
