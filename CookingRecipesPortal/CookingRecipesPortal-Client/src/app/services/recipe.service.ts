@@ -10,9 +10,8 @@ export class RecipeService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getRecipesByAuthorId(/*authorId: string*/) {
-    let authorId = "7EE964BD-28F5-4F58-D718-08DA28E36011";
-
+  getRecipesByAuthorId(authorId: string) {
+    console.log("authorId: ", authorId);
     return this.httpClient.get<PagedResponse<RecipeDetails>>(`/api/recipes/${authorId}`);
   }
 }

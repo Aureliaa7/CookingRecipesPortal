@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AccountService } from '../../services/account.service';
 import { TokenHelperService } from '../../services/token-helper.service';
 
 @Component({
@@ -10,7 +12,10 @@ export class NavMenuComponent {
 
   isExpanded = false;
 
-  constructor(private tokenHelperService: TokenHelperService) { }
+  constructor(
+    private tokenHelperService: TokenHelperService,
+    private accountService: AccountService,
+    private router: Router) { }
 
   collapse() {
     this.isExpanded = false;
@@ -22,5 +27,10 @@ export class NavMenuComponent {
 
   isUserAuthenticated(): boolean {
     return !this.tokenHelperService.isTokenExpired();
+  }
+
+  logOut() {
+    this.accountService.logOut();
+    this.router.navigate(['/'])
   }
 }

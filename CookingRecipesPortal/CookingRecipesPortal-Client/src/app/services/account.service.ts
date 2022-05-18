@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Constants } from '../constants';
 import { UserLogin } from '../models/user-login';
 import { UserRegistration } from '../models/user-registration';
+import { LocalStorageService } from './local-storage.service';
 import { TokenHelperService } from './token-helper.service';
 
 @Injectable({
@@ -10,7 +11,10 @@ import { TokenHelperService } from './token-helper.service';
 })
 export class AccountService {
 
-  constructor(private http: HttpClient, private tokenHelperService: TokenHelperService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenHelperService: TokenHelperService,
+    private localStorageService: LocalStorageService) { }
 
   login(userLogin: UserLogin) {
     const credentials = JSON.stringify(userLogin);
@@ -28,5 +32,9 @@ export class AccountService {
 
   getCurrentUserId(): string {
     return this.tokenHelperService.getUserId();
+  }
+
+  logOut(): void {
+    this.localStorageService.remove(Constants.TokenInfo);
   }
 }

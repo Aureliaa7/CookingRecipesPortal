@@ -4,13 +4,26 @@
       <mat-card-title>{{recipe.name}}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <app-image-carousel [images]="recipe.images"></app-image-carousel>
-      <div class="recipe-description">
-        {{recipe.description}}
+      <div class="recipe-content">
+        <app-image-carousel [images]="recipe.images"></app-image-carousel>
+        <div class="details">
+          <div class="recipe-description">
+            <h3><b>Description</b></h3>
+            {{recipe.description}}
+          </div>
+
+          <div class="steps">
+            <h3><b>Steps</b></h3>
+            {{recipe.steps}}
+          </div>
+        </div>
+
+        <div class="ingredients">
+          <h3><b>Ingredients</b></h3>
+          {{recipe.ingredients}}
+        </div>
       </div>
-      <div >
-        
-      </div>
+      
     </mat-card-content>
     <div class="icons" *ngIf="isRecipeAuthor">
       <button mat-icon-button (click)="editRecipe.emit(recipe.id)">

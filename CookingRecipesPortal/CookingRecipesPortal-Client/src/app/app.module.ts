@@ -23,6 +23,7 @@ import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { MatIconModule } from '@angular/material/icon'
 import { RecipeService } from './services/recipe.service';
 import { AuthInterceptor } from './services/auth-interceptor.service';
+import { LoadMoreComponent } from './components/load-more/load-more.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { AuthInterceptor } from './services/auth-interceptor.service';
     RecipesListComponent,
     SavedRecipesComponent,
     UserRecipesComponent,
-    ImageCarouselComponent
+    ImageCarouselComponent,
+    LoadMoreComponent
   ],
   imports: [
     AppRoutingModule,

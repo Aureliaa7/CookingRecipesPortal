@@ -16,10 +16,34 @@ mat-card-title {
   width: 70%;
   margin: auto;
   margin-bottom: 30px;
+  border-radius: 15px;
 }
 
 .icons {
   width: 30%;
   display: inline-block;
   margin-left: 70%;
+}
+
+.details {
+    display: inline-block;
+    width: 65%;
+    word-break: break-word;
+}
+
+app-image-carousel {
+    display: inline-block;
+    position: relative;
+    margin-right: 20px;
+}
+
+.steps, .ingredients {
+  margin-top: 20px;
+  word-break: break-word;
+}
+
+.details, .ingredients {
+  border: 1px solid grey;
+  border-radius: 10px;
+  padding: 20px;
 }

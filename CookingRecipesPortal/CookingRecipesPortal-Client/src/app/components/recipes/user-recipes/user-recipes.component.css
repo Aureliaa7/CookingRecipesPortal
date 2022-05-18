@@ -1,0 +1,9 @@
+h2 {
+    text-align: center;
+    margin: 20px 0 20px 0;
+}
+
+app-load-more {
+    float: right;
+    padding-bottom: 50px;
+}
