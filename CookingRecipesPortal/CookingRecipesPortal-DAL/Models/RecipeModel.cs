@@ -16,6 +16,8 @@
 
         public Guid AuthorId { get; set; }
 
+        public string AuthorName { get; set; }
+
         public int NoLikes { get; set; }
 
         public DateTime PublishingDate { get; set; }

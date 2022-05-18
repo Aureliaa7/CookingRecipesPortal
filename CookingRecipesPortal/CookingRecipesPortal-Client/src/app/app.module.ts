@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
@@ -14,7 +14,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './components/accounts/login/login.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
-
+import { RecipeCardComponent } from './components/recipes/recipe-card/recipe-card.component';
+import { RecipesListComponent } from './components/recipes/recipes-list/recipes-list.component';
+import { SavedRecipesComponent } from './components/recipes/saved-recipes/saved-recipes.component';
+import { UserRecipesComponent } from './components/recipes/user-recipes/user-recipes.component';
+import { ImageCarouselComponent } from './components/image-carousel/image-carousel.component';
+import { MatCarouselModule } from '@ngmodule/material-carousel';
+import { MatIconModule } from '@angular/material/icon'
+import { RecipeService } from './services/recipe.service';
+import { AuthInterceptor } from './services/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +30,12 @@ import { HomeComponent } from './components/home/home.component';
     RegisterComponent,
     LoginComponent,
     NavMenuComponent,
-    HomeComponent
+    HomeComponent,
+    RecipeCardComponent,
+    RecipesListComponent,
+    SavedRecipesComponent,
+    UserRecipesComponent,
+    ImageCarouselComponent
   ],
   imports: [
     AppRoutingModule,
@@ -34,9 +47,19 @@ import { HomeComponent } from './components/home/home.component';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatCarouselModule.forRoot(),
+    MatIconModule
   ],
-  providers: [AccountService],
+  providers: [
+    AccountService,
+    RecipeService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

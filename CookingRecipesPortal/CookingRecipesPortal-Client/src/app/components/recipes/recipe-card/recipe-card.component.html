@@ -1,0 +1,33 @@
+<div class="recipe">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{recipe.name}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-image-carousel [images]="recipe.images"></app-image-carousel>
+      <div class="recipe-description">
+        {{recipe.description}}
+      </div>
+      <div >
+        
+      </div>
+    </mat-card-content>
+    <div class="icons" *ngIf="isRecipeAuthor">
+      <button mat-icon-button (click)="editRecipe.emit(recipe.id)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="deleteRecipe.emit(recipe.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+
+    <div class="icons" *ngIf="isUserLoggedIn && !isRecipeAuthor">
+      <button mat-icon-button (click)="saveRecipe.emit(recipe.id)">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button mat-icon-button (click)="likeRecipe.emit(recipe.id)">
+        <mat-icon>like</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+</div>

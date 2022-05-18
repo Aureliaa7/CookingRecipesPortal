@@ -46,10 +46,12 @@ namespace CookingRecipesPortal_DAL.Services
 
             foreach (var recipe in recipes)
             {
+                var author = await unitOfWork.UsersRepository.GetByIdAsync(recipe.AuthorId);
                 recipeModels.Add(new RecipeModel
                 {
                     Id = recipe.Id,
                     AuthorId = recipe.AuthorId,
+                    AuthorName = $"{author?.FirstName} {author?.LastName}",
                     Description = recipe.Description,
                     Ingredients = recipe.Ingredients,
                     Name = recipe.Name,

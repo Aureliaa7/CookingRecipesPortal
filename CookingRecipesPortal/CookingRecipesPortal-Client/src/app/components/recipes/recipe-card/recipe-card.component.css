@@ -1,0 +1,25 @@
+.recipe-description {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 180px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 20px;
+  padding: 10px;
+}
+
+mat-card-title {
+  color: #396376;
+}
+
+.recipe {
+  width: 70%;
+  margin: auto;
+  margin-bottom: 30px;
+}
+
+.icons {
+  width: 30%;
+  display: inline-block;
+  margin-left: 70%;
+}
