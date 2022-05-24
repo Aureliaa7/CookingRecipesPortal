@@ -91,5 +91,14 @@ namespace CookingRecipesPortal_API.Controllers
             var savedRecipes = await cookingRecipeService.GetSavedRecipesAsync(userId, new PaginationFilter(pageNumber, pageSize));
             return Ok(savedRecipes);
         }
+
+
+        [HttpGet]
+        [Route("{userId}/followees")]
+        public async Task<IActionResult> GetFolloweesRecipes([FromRoute] Guid userId, [FromQuery] int pageSize, [FromQuery] int pageNumber)
+        {
+            var recipes = await cookingRecipeService.GetFollowedUsersRecipes(userId, new PaginationFilter(pageNumber, pageSize));
+            return Ok(recipes);
+        }
     }
 }

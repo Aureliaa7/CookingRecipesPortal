@@ -22,5 +22,7 @@ namespace CookingRecipesPortal_DAL.Interfaces.Services
         Task RemoveFromLikedRecipesAsync(Guid userId, Guid recipeId);
 
         Task<PagedResponseModel<RecipeModel>> GetSavedRecipesAsync(Guid userId, PaginationFilter paginationFilter);
+
+        Task<PagedResponseModel<ExtendedRecipeModel>> GetFollowedUsersRecipes(Guid userId, PaginationFilter paginationFilter);
     }
 }

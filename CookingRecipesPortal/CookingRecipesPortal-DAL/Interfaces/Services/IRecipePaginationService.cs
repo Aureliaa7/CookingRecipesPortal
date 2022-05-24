@@ -7,5 +7,8 @@ namespace CookingRecipesPortal_DAL.Interfaces.Services
     {
         Task<PagedResponseModel<RecipeModel>> GetSavedRecipesAsync(
             Guid userId, PaginationFilter paginationFilter);
+
+        Task<PagedResponseModel<RecipeModel>> GetFollowedUsersRecipesAsync(
+            Guid userId, PaginationFilter paginationFilter);
     }
 }

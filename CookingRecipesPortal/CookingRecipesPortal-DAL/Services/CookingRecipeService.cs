@@ -260,5 +260,56 @@ namespace CookingRecipesPortal_DAL.Services
         {
             return paginationService.GetSavedRecipesAsync(userId, paginationFilter);
         }
+
+        public async Task<PagedResponseModel<ExtendedRecipeModel>> GetFollowedUsersRecipes(Guid userId, PaginationFilter paginationFilter)
+        {
+            await CheckUserExistenceAsync(userId);
+
+            var pagedRecipes = await paginationService.GetFollowedUsersRecipesAsync(userId, paginationFilter);
+            var pagedResult = new PagedResponseModel<ExtendedRecipeModel>
+            {
+                Data = await GetExtendedRecipeModelsAsync(userId, pagedRecipes.Data),
+                PageNumber = pagedRecipes.PageNumber,
+                PageSize = pagedRecipes.PageSize,
+                TotalPages = pagedRecipes.TotalPages,
+                TotalRecords = pagedRecipes.TotalRecords
+            };
+
+            return pagedResult;
+        }
+
+        private async Task<IList<ExtendedRecipeModel>> GetExtendedRecipeModelsAsync(Guid userId, IList<RecipeModel> recipes)
+        {
+            var recipeModels = new List<ExtendedRecipeModel>();
+
+            foreach (var recipe in recipes)
+            {
+                recipeModels.Add(new ExtendedRecipeModel
+                {
+                    Id = recipe.Id,
+                    AuthorId = recipe.AuthorId,
+                    AuthorName = recipe.AuthorName,
+                    Description = recipe.Description,
+                    Ingredients = recipe.Ingredients,
+                    Name = recipe.Name,
+                    NoLikes = recipe.NoLikes,
+                    PublishingDate = recipe.PublishingDate,
+                    Steps = recipe.Steps,
+                    Images = recipe.Images,
+                    IsLiked = await IsSavedOrLikedAsync(userId, recipe.Id, UserRecipeActionType.Like),
+                    IsSaved = await IsSavedOrLikedAsync(userId, recipe.Id, UserRecipeActionType.Save)
+                });
+            }
+
+            return recipeModels;
+        }
+
+        private async Task<bool> IsSavedOrLikedAsync(Guid userId, Guid recipeId, UserRecipeActionType actionType)
+        {
+            return await unitOfWork.LikedSavedRecipesRepository.ExistsAsync(
+                x => x.RecipeId == recipeId &&
+                x.UserId == userId &&
+                (x.ActionType == actionType || x.ActionType == UserRecipeActionType.SaveAndLike));
+        }
     }
 }
